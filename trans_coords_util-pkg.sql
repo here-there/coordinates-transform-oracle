@@ -1,4 +1,6 @@
---´´½¨Êı¾İÀàĞÍ
+/* author: bailiuchuanshui@live.cn */
+
+--åˆ›å»ºæ•°æ®ç±»å‹
 create type LONLAT_RESULT_TYPE as OBJECT (
     LON number,
     LAT number
@@ -6,23 +8,23 @@ create type LONLAT_RESULT_TYPE as OBJECT (
 
 create or replace package TRANS_COORDS_UTIL is
   /**
-     ×ø±ê×ª»»¹¤¾ß¼¯£ºWGS84¡¢¸ßµÂ×ø±ê¡¢°Ù¶È×ø±ê»¥×ª
+     åæ ‡è½¬æ¢å·¥å…·é›†ï¼šWGS84ã€é«˜å¾·åæ ‡ã€ç™¾åº¦åæ ‡äº’è½¬
   */
   PI CONSTANT number := 3.14159265358979324;
   X_PI CONSTANT number := 3.14159265358979324 * 3000.0 / 180.0;
 
-  function transformLon(x number, y number) return number; --×ª»»¾­¶È
-  function transformLat(x number, y number) return number; --×ª»»Î³¶È
-  function delta(lon number, lat number) return LONLAT_RESULT_TYPE; --Çó×ª»»ÔöÁ¿
-  function outOfChina(lon number, lat number) return boolean; --ÊÇ·ñÔÚÖĞ¹ú·¶Î§ÄÚ
-  function gcj_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> ¹ú²â¾Ö×ø±ê 
-  function gcj_decrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- ¹ú²â¾Ö×ø±ê -> WGS84
-  function gcj_decrypt_exact(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- ¹ú²â¾Ö×ø±ê -> WGS84(¶ş·Ö²éÕÒ)
-  function bd_encrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- ¹ú²â¾Ö×ø±ê -> °Ù¶È¾­Î³¶È×ø±ê£¨»ğĞÇ×ø±ê£©
-  function bd_decrypt(bdLon number, bdLat number) return LONLAT_RESULT_TYPE; -- °Ù¶È¾­Î³¶È×ø±ê£¨»ğĞÇ×ø±ê£©-> ¹ú²â¾Ö×ø±ê
-  function mercator_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> Ä«¿¨ÍĞÍ¶Ó°×ø±ê
-  function mercator_decrypt(mercatorLon number, mercatorLat number) return LONLAT_RESULT_TYPE; -- Ä«¿¨ÍĞÍ¶Ó°×ø±ê -> WGS84
-  function distance(lonA number, latA number, lonB number, latB number) return number; -- ÇóÁ½¸öµãµÄ¾àÀë£¨Ã×£©
+  function transformLon(x number, y number) return number; --è½¬æ¢ç»åº¦
+  function transformLat(x number, y number) return number; --è½¬æ¢çº¬åº¦
+  function delta(lon number, lat number) return LONLAT_RESULT_TYPE; --æ±‚è½¬æ¢å¢é‡
+  function outOfChina(lon number, lat number) return boolean; --æ˜¯å¦åœ¨ä¸­å›½èŒƒå›´å†…
+  function gcj_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> å›½æµ‹å±€åæ ‡ 
+  function gcj_decrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- å›½æµ‹å±€åæ ‡ -> WGS84
+  function gcj_decrypt_exact(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- å›½æµ‹å±€åæ ‡ -> WGS84(äºŒåˆ†æŸ¥æ‰¾)
+  function bd_encrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- å›½æµ‹å±€åæ ‡ -> ç™¾åº¦ç»çº¬åº¦åæ ‡ï¼ˆç«æ˜Ÿåæ ‡ï¼‰
+  function bd_decrypt(bdLon number, bdLat number) return LONLAT_RESULT_TYPE; -- ç™¾åº¦ç»çº¬åº¦åæ ‡ï¼ˆç«æ˜Ÿåæ ‡ï¼‰-> å›½æµ‹å±€åæ ‡
+  function mercator_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> å¢¨å¡æ‰˜æŠ•å½±åæ ‡
+  function mercator_decrypt(mercatorLon number, mercatorLat number) return LONLAT_RESULT_TYPE; -- å¢¨å¡æ‰˜æŠ•å½±åæ ‡ -> WGS84
+  function distance(lonA number, latA number, lonB number, latB number) return number; -- æ±‚ä¸¤ä¸ªç‚¹çš„è·ç¦»ï¼ˆç±³ï¼‰
 end TRANS_COORDS_UTIL;
 
 
@@ -168,8 +170,8 @@ create or replace package BODY TRANS_COORDS_UTIL is
   
   function delta(lon number, lat number) return LONLAT_RESULT_TYPE is 
     
-    a number := 6378245.0; /*ÎÀĞÇÍÖÇò×ø±êÍ¶Ó°µ½Æ½ÃæµØÍ¼×ø±êÏµµÄÍ¶Ó°Òò×Ó¡£*/
-    ee number := 0.00669342162296594323; /*ÍÖÇòµÄÆ«ĞÄÂÊ*/
+    a number := 6378245.0; /*å«æ˜Ÿæ¤­çƒåæ ‡æŠ•å½±åˆ°å¹³é¢åœ°å›¾åæ ‡ç³»çš„æŠ•å½±å› å­ã€‚*/
+    ee number := 0.00669342162296594323; /*æ¤­çƒçš„åå¿ƒç‡*/
     
     lonlat LONLAT_RESULT_TYPE;
     dLat number;
