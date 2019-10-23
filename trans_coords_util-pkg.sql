@@ -20,8 +20,8 @@ create or replace package TRANS_COORDS_UTIL is
   function gcj_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> 国测局坐标 
   function gcj_decrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- 国测局坐标 -> WGS84
   function gcj_decrypt_exact(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- 国测局坐标 -> WGS84(二分查找)
-  function bd_encrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- 国测局坐标 -> 百度经纬度坐标（火星坐标）
-  function bd_decrypt(bdLon number, bdLat number) return LONLAT_RESULT_TYPE; -- 百度经纬度坐标（火星坐标）-> 国测局坐标
+  function bd_encrypt(gcjLon number, gcjLat number) return LONLAT_RESULT_TYPE; -- 国测局坐标 -> 百度经纬度坐标
+  function bd_decrypt(bdLon number, bdLat number) return LONLAT_RESULT_TYPE; -- 百度经纬度坐标-> 国测局坐标
   function mercator_encrypt(wgsLon number, wgsLat number) return LONLAT_RESULT_TYPE; -- WGS84 -> 墨卡托投影坐标
   function mercator_decrypt(mercatorLon number, mercatorLat number) return LONLAT_RESULT_TYPE; -- 墨卡托投影坐标 -> WGS84
   function distance(lonA number, latA number, lonB number, latB number) return number; -- 求两个点的距离（米）
